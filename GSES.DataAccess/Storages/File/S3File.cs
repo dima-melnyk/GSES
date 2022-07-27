@@ -61,7 +61,12 @@ namespace GSES.DataAccess.Storages.File
                 items.AddRange(existingElements);
             }
 
-            return items;
+            return items.Where(predicate);
+        }
+
+        public Task<IEnumerable<T>> GetAllAsync()
+        {
+            return this.GetAsync(t => true);
         }
 
         public async Task UpdateAsync(T element)
