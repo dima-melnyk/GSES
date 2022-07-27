@@ -1,3 +1,5 @@
+using GSES.DataAccess.Storages.Bases;
+using GSES.DataAccess.Storages.File;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +34,8 @@ namespace GSES.API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GSES.API", Version = "v1" });
             });
+
+            services.AddScoped<IStorage, S3FileStorage>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
