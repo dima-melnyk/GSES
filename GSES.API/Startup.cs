@@ -1,3 +1,8 @@
+using Amazon.S3;
+using GSES.DataAccess.Repositories;
+using GSES.DataAccess.Repositories.Interfaces;
+using GSES.DataAccess.Storages.Bases;
+using GSES.DataAccess.Storages.File;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,12 +31,17 @@ namespace GSES.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GSES.API", Version = "v1" });
             });
+
+            services.AddAWSService<IAmazonS3>();
+            services.AddScoped<IStorage, S3FileStorage>();
+            services.AddTransient<ISubscriberRepository, SubscriberRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
