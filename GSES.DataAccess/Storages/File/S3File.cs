@@ -40,6 +40,11 @@ namespace GSES.DataAccess.Storages.File
                 await this.DeleteOldVersionOfS3FileAsync();
             }
 
+            if (allTheElements.Contains(element))
+            {
+                throw new ArgumentException(AWSConsts.DuplicateErrorMessage, nameof(element));
+            }
+
             allTheElements.Add(element);
 
             await this.PutNewVersionOfFileToS3BucketAsync(allTheElements);
