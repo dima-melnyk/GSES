@@ -1,4 +1,8 @@
 using Amazon.S3;
+using GSES.BusinessLogic.Processors;
+using GSES.BusinessLogic.Processors.Interfaces;
+using GSES.BusinessLogic.Services;
+using GSES.BusinessLogic.Services.Interfaces;
 using GSES.DataAccess.Repositories;
 using GSES.DataAccess.Repositories.Interfaces;
 using GSES.DataAccess.Storages.Bases;
@@ -15,6 +19,8 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace GSES.API
@@ -39,9 +45,27 @@ namespace GSES.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "GSES.API", Version = "v1" });
             });
 
+            services.AddHttpClient();
+            services.AddTransient<SmtpClient>((serviceProvider) =>
+            {
+                return new SmtpClient()
+                {
+                    Host = Configuration.GetValue<String>("Email:Smtp:Host"),
+                    Port = Configuration.GetValue<int>("Email:Smtp:Port"),
+                    Credentials = new NetworkCredential(
+                            Configuration.GetValue<String>("Email:Smtp:Username"),
+                            Configuration.GetValue<String>("Email:Smtp:Password")
+                        )
+                };
+            });
+
             services.AddAWSService<IAmazonS3>();
             services.AddScoped<IStorage, S3FileStorage>();
             services.AddTransient<ISubscriberRepository, SubscriberRepository>();
+
+            services.AddTransient<IRateProcessor, RateProcessor>();
+            services.AddTransient<IRateService, RateService>();
+            services.AddTransient<ISubscriberService, SubscriberService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

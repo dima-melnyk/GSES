@@ -1,17 +1,18 @@
-﻿using Newtonsoft.Json;
+﻿using GSES.BusinessLogic.Consts;
+using Newtonsoft.Json;
 
 namespace GSES.BusinessLogic.Models.Rate
 {
     [JsonObject]
     public class CoinApiRateModel : BaseRateModel
     {
-        [JsonProperty("time")]
+        [JsonProperty(RateConsts.TimeField)]
         public string Time { get; set; }
 
-        [JsonProperty("asset_id_base")]
+        [JsonProperty(RateConsts.FromField)]
         public string From { get; set; }
 
-        [JsonProperty("asset_id_quote")]
+        [JsonProperty(RateConsts.ToField)]
         public string To { get; set; }
     }
 }
