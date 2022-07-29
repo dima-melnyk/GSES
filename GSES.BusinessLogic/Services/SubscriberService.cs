@@ -1,4 +1,5 @@
-﻿using GSES.BusinessLogic.Consts;
+﻿using FluentValidation;
+using GSES.BusinessLogic.Consts;
 using GSES.BusinessLogic.Extensions;
 using GSES.BusinessLogic.Services.Interfaces;
 using GSES.DataAccess.Entities;
@@ -13,14 +14,23 @@ namespace GSES.BusinessLogic.Services
     {
         private readonly ISubscriberRepository subscriberRepository;
         private readonly SmtpClient smtpClient;
+        private readonly IValidator<Subscriber> validator;
 
-        public SubscriberService(ISubscriberRepository subscriberRepository, SmtpClient smtpClient)
+        public SubscriberService(
+            ISubscriberRepository subscriberRepository, 
+            SmtpClient smtpClient,
+            IValidator<Subscriber> validator)
         {
             this.subscriberRepository = subscriberRepository;
             this.smtpClient = smtpClient;
+            this.validator = validator;
         }
 
-        public Task AddSubscriberAsync(Subscriber subscriber) => this.subscriberRepository.AddAsync(subscriber);
+        public async Task AddSubscriberAsync(Subscriber subscriber)
+        {
+            await this.validator.ValidateAndThrowAsync(subscriber);
+            await this.subscriberRepository.AddAsync(subscriber);
+        }
 
         public async Task SendRateForAllTheSubscribers()
         {
