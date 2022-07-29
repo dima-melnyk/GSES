@@ -1,11 +1,10 @@
-﻿using GSES.DataAccess.Entities;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace GSES.BusinessLogic.Services.Interfaces
 {
     public interface ISubscriberService
     {
-        Task AddSubscriberAsync(Subscriber subscriber);
+        Task AddSubscriberAsync(string email);
 
         Task SendRateForAllTheSubscribers();
     }

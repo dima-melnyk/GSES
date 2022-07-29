@@ -26,8 +26,13 @@ namespace GSES.BusinessLogic.Services
             this.validator = validator;
         }
 
-        public async Task AddSubscriberAsync(Subscriber subscriber)
+        public async Task AddSubscriberAsync(string email)
         {
+            var subscriber = new Subscriber
+            {
+                Email = email,
+            };
+
             await this.validator.ValidateAndThrowAsync(subscriber);
             await this.subscriberRepository.AddAsync(subscriber);
         }
