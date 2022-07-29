@@ -7,6 +7,7 @@ using GSES.DataAccess.Storages.Bases;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net.Mime;
@@ -42,7 +43,7 @@ namespace GSES.DataAccess.Storages.File
 
             if (allTheElements.Contains(element))
             {
-                throw new ArgumentException(AWSConsts.DuplicateErrorMessage, nameof(element));
+                throw new DuplicateNameException(AWSConsts.DuplicateErrorMessage);
             }
 
             allTheElements.Add(element);
