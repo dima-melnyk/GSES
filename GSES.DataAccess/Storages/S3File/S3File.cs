@@ -14,11 +14,11 @@ using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GSES.DataAccess.Storages.File
+namespace GSES.DataAccess.Storages.S3File
 {
     public class S3File<T> : ITable<T> where T : BaseEntity
     {
-        private const string FileName = nameof(T) + AWSConsts.JsonExtension;
+        private const string FileName = nameof(T) + GeneralConsts.JsonExtension;
 
         private readonly IAmazonS3 s3Client;
 
@@ -43,7 +43,7 @@ namespace GSES.DataAccess.Storages.File
 
             if (allTheElements.Contains(element))
             {
-                throw new DuplicateNameException(AWSConsts.DuplicateErrorMessage);
+                throw new DuplicateNameException(GeneralConsts.DuplicateErrorMessage);
             }
 
             allTheElements.Add(element);
@@ -75,36 +75,9 @@ namespace GSES.DataAccess.Storages.File
             return this.GetAsync(t => true);
         }
 
-        public async Task UpdateAsync(T element)
+        public Task UpdateAsync(T element)
         {
             throw new NotImplementedException();
-        }
-
-        private async Task<bool> DoesFileExistAsync()
-        {
-            var fileList = await s3Client.ListObjectsAsync(AWSConsts.DataBucketName);
-
-            if (fileList == null)
-            {
-                return false;
-            }
-
-            return fileList.S3Objects.Any(o => o.Key == FileName);
-        }
-
-        private async Task EnsureFileExistsAsync()
-        {
-            if (!(await this.DoesFileExistAsync()))
-            {
-                var putRequest = new PutObjectRequest
-                {
-                    Key = FileName,
-                    BucketName = AWSConsts.DataBucketName,
-                    ContentType = MediaTypeNames.Application.Json,
-                };
-
-                await s3Client.PutObjectAsync(putRequest);
-            }
         }
 
         private async Task<IEnumerable<T>> GetListOfElementsFromS3FileAsync()

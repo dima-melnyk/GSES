@@ -1,4 +1,4 @@
-﻿using GSES.BusinessLogic.Processors;
+﻿using GSES.BusinessLogic.Processors.Interfaces;
 using GSES.BusinessLogic.Services.Interfaces;
 using System.Threading.Tasks;
 
@@ -6,9 +6,9 @@ namespace GSES.BusinessLogic.Services
 {
     public class RateService : IRateService
     {
-        private readonly RateProcessor rateProcessor;
+        private readonly IRateProcessor rateProcessor;
 
-        public RateService(RateProcessor rateProcessor)
+        public RateService(IRateProcessor rateProcessor)
         {
             this.rateProcessor = rateProcessor;
         }

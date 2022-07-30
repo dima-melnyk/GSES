@@ -3,7 +3,7 @@ using GSES.DataAccess.Consts;
 using GSES.DataAccess.Entities;
 using GSES.DataAccess.Storages.Bases;
 
-namespace GSES.DataAccess.Storages.File
+namespace GSES.DataAccess.Storages.S3File
 {
     public class S3FileStorage : IStorage
     {
