@@ -27,12 +27,22 @@ namespace GSES.DataAccess.Storages.File
                 throw new DuplicateNameException(GeneralConsts.DuplicateErrorMessage);
             }
 
-            list.Add(element);
-
-            var jsonList = JsonConvert.SerializeObject(list);
+            var jsonModel = JsonConvert.SerializeObject(element);
             EnsureFolderExists(FileConsts.FilePath);
 
-            await F.WriteAllTextAsync(FullPath, jsonList);
+            var format = FileConsts.EmptyListFormat;
+
+            using var fileStream = new FileStream(FullPath, FileMode.OpenOrCreate, FileAccess.Write);
+            using var streamWriter = new StreamWriter(fileStream);
+
+            if (list.Count > 0)
+            {
+                format = FileConsts.NonEmptyListFormat;
+                fileStream.Position = fileStream.Seek(-1, SeekOrigin.End);
+            }
+
+            var elementToList = string.Format(format, jsonModel);
+            await streamWriter.WriteAsync(elementToList);
         }
 
         public Task DeleteAsync(T element)

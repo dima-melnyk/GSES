@@ -19,6 +19,7 @@ using FluentValidation;
 using GSES.BusinessLogic.Validators;
 using GSES.API.Consts;
 using GSES.DataAccess.Storages.File;
+using GSES.API.Middlewares;
 
 namespace GSES.API
 {
@@ -82,6 +83,8 @@ namespace GSES.API
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
